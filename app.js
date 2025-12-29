@@ -1,4 +1,5 @@
 let button = document.querySelector('button')
+let body = document.querySelector('body')
 button.addEventListener('click', getCords)
 function getCords() {
     console.log(navigator.geolocation)
@@ -21,50 +22,85 @@ function locationFinder(lat,long){
     console.log(state)
     displayCards(country,city,state)
  } ))
+
+ 
+}
 function displayCards(country,city,state){
  fetch(`https://restcountries.com/v3.1/name/${country}`).then(response => response.json().then(response =>{
      console.log(response)
      let {population,unMember,area} = response[0]
-let digits = population.toString().length
-let divider = 10 ** (digits - 3)
-
-let scaled = (population / divider).toFixed(0)
+let scaled = (population / 1000000).toFixed(1) + ' M'
 
 console.log(scaled)
      let timeZone = response[0].timezones[0]
      let continents = response[0].continents[0]
      let capital =response[0].capital[0]
-let [neighbour1,neighbour2,neighbour3,neighbour4]= response[0].borders
+ let neighbours = response[0].borders || []
 let {png:flag} = response[0].flags
-     console.log(population)
-     console.log(timeZone)
-     console.log(capital)
-     console.log(unMember)
-     console.log(area)
-     console.log(neighbour1)
-     console.log(neighbour2)
-     console.log(neighbour3)
-     console.log(neighbour4)
-     console.log(flag)
-let card = document.querySelector('.country-card')
+
+let card = document.createElement('div')
+card.className = 'country-card'
+body.appendChild(card)
 card.innerHTML = `<img class="country-flag" src="${flag}"/>
 
   <div class="card-body">
-    <h2 class="country-name">Country: ${country}</h2>
-    <p class="country-location">Region: ${city},${state}</p>
+    <h2 class="country-name">Your Country: ${country}</h2>
+    <p class="country-location">Your Region: ${city},${state}</p>
 
     <h3>About your Country</h3>
 
     <ul class="country-info">
-      <li><strong>Population:</strong> <span class="population">${scaled}M+</span></li>
+      <li><strong>Population:</strong> <span class="population">${scaled}</span></li>
       <li><strong>Area:</strong> <span class="area">${area}</span> km²</li>
       <li><strong>UN Member:</strong> <span class="un">${unMember?'Yes':'No'}</span></li>
       <li><strong>Capital:</strong> <span class="capital">${capital}</span></li>
       <li><strong>Time Zone:</strong> <span class="timezone">${timeZone}</span></li>
-      <li><strong>Neighbours:</strong> <span class="neighbours">${neighbour1},${neighbour2},${neighbour3},${neighbour4},</span></li>
+
+    </ul>
+  </div>`
+  let neighbourH1 = document.createElement('h1')
+  neighbourH1.innerText = 'Your Neighbouring Countries :'
+  body.appendChild(neighbourH1)
+  neighbours.forEach(neighbour => {
+    neighboursDisplay(neighbour)
+  });
+} ))
+
+
+}
+
+function neighboursDisplay(neighbour){
+ fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`).then(response => response.json().then(response =>{
+     console.log(response)
+     let {population,unMember,area} = response[0]
+let {common:name} = response[0].name
+
+let scaled = (population / 1_000_000).toFixed(1) + ' M'
+
+console.log(scaled)
+     let timeZone = response[0].timezones[0]
+     let continents = response[0].continents[0]
+     let capital =response[0].capital[0]
+let {png:flag} = response[0].flags
+
+let card = document.createElement('div')
+card.className = 'country-card'
+body.appendChild(card)
+card.innerHTML = `<img class="country-flag" src="${flag}"/>
+
+  <div class="card-body">
+    <h2 class="country-name">Country: ${name}</h2>
+
+    <h3>About Country</h3>
+
+    <ul class="country-info">
+      <li><strong>Population:</strong> <span class="population">${scaled}</span></li>
+      <li><strong>Area:</strong> <span class="area">${area}</span> km²</li>
+      <li><strong>UN Member:</strong> <span class="un">${unMember?'Yes':'No'}</span></li>
+      <li><strong>Capital:</strong> <span class="capital">${capital}</span></li>
+      <li><strong>Time Zone:</strong> <span class="timezone">${timeZone}</span></li>
+
     </ul>
   </div>`
 } ))
-}
-
 }

@@ -3,16 +3,16 @@
     padding: 0;
     box-sizing: border-box;
 }
-body{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction:column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    background: #fff2ec;
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: #fff2ec;
+  padding: 20px;
 }
+
 button{
     background: #fe3b01;
     color: white;
@@ -36,6 +36,7 @@ button:hover{
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
   font-family: system-ui, sans-serif;
+  height: auto;
 }
 
 .country-flag {
@@ -75,4 +76,9 @@ button:hover{
   font-size: 14px;
   margin-bottom: 6px;
   color: #333;
+}
+h1{
+  font-family: 'Poppins',sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
 }
